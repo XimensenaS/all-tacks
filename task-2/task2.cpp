@@ -5,23 +5,26 @@
 #include <sstream>
 #include <vector>
 #include <fstream>
+#include <ctime>
 
 using namespace std;
 int main()
 {
-    string path;
-    cout << "Input path:";
-    getline(cin,path);
-    ifstream file(path,ios::binary);
-    while(!file.is_open()){
-        cout << "Retry input path:";
-        getline(cin,path);
-        ifstream file(path,ios::binary);
+    srand(time(nullptr));
+    ofstream file(".\\pic.txt");
+    if(!file){
+        cerr << "Unable to open the file.";
+        return 1;
     }
-    while(!file.eof()){
-        char buffer[22]= {0};
-        file.read(buffer,21);
-        cout << buffer;
-    }
+    cout << "Inter height and width:";
+    int height,width;
+    cin >> height>> width;
+    cout << height<< width<<endl;
+    for(int i=0;i<height;i++){
+        for(int j=0;j<width;j++){
+            file << rand()%2;
+        }
+        file << endl;
+    } 
     file.close();
 }

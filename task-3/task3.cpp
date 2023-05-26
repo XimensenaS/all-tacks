@@ -10,21 +10,46 @@ using namespace std;
 
 int main()
 {
-    string name,secondname;
-    int payment=0,sum=0;
-    ifstream file("C:\\Users\\User\\all-tacks\\task-3\\data.txt");
-    while(!file.eof()){
-        string cur_name,cor_secondname,cur_timing;
-        int cur_payment;
-        file >> cur_name >> cor_secondname >> cur_payment >> cur_timing;
-        if(cur_payment > payment){
-            name=cur_name;
-            secondname=cor_secondname;
-            payment= cur_payment;
-        }
-        sum+=cur_payment;
+    ofstream backet(".//backet.txt",ios::app);
+    if(!backet){
+        cerr << "Unable to open the file.";
+        return 1;
     }
-    cout << "The largest recipient of funds"<< name << 
-            " " << secondname << " " << payment << endl;
-    cout << "The total payout amount is equal to" << sum;
+    ifstream river(".//river.txt");
+    if(!river){
+        cerr << "Unable to open the file.";
+        return 1;
+    }
+    cout << "Inter type of fish for fishing(to finish fishing, enter home):";
+    string type;
+    vector <string> Catch;
+    int count=0;
+    cin >> type;
+    while(type != "home"){
+        bool found = false;
+        river.seekg(0);
+        while (!river.eof()||found){
+            string fish;
+            river >> fish;
+            found = fish ==type;
+            if(found){
+                cout << "You catch " << type<<"."<<endl;
+                backet << type<< endl; 
+                Catch.push_back(type);
+                count++;
+            }
+        }
+        cout << "Inter type of fish for fishing(to finish fishing, enter home):";
+        cin >> type;
+    }
+    if(count ==0){
+        cout << "You didn't catch anything."; 
+    }else{
+        cout << "Have you caught these fish:"<< endl; 
+        for(int i = 0;i<count;i++){
+            cout << Catch[i]<<endl;
+        }
+    }
+    river.close();
+    backet.close();
 }
