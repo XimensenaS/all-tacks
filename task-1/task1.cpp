@@ -1,108 +1,66 @@
-#include <cassert>
-#include <cmath>
-#include <cstdlib>
 #include <iostream>
-#include <sstream>
 #include <vector>
-#include <fstream>
+#include <map>
 #include <string>
 
 using namespace std;
 
-struct statement{
-    string name;
-    string surname;
-    string date;
-    int payment;
+enum OPTION{
+    ADD,
+    GET_SURNANE,
+    GET_PHONE_NUMBER
 };
-
-bool FileIsExist(string Path)
-{
-    bool isExist = false;
-    ifstream fin(filePath);
- 
-    if(fin.is_open())
-        fin.close();
-        return true;
- 
-    fin.close();
-    return isExist;
-}
-
-int day_month(int i){
-    if(i==1||i==3||i==5||i==7||i==8||i==10||i==12){
-        return 31;
-    }else if(i==2){
-        return 28;
-    }else{
-        return 30;
-    }
-}
-
-void add_statement(statement &data,ofstream &file){
-    cout << "Input name,surname,data payment(in the format DD.MM.YYYY) and payment:" << endl;
-    cin  >>  data.name >> data.surname >> data.date >> data.payment;
-    int month = stoi(data.date.substr(3, 2));
-    int day = stoi(data.date.substr(0, 2));
-    int year = stoi(data.date.substr(6, 4));
-    if(year>2023||month>12||day_month(month)<=day){
-        cerr << "Uncurrect date.";
-    }else if(data.payment<=0){
-        cerr << "Uncurrect payment.";
-    }else {
-        data.date = to_string(day) + '.' + to_string(month) + '.' + to_string(year);
-        file << data.name << " " << data.surname << " " << data.date << " " << data.payment<< endl; 
-    }
-}
-
-void list_statement(ifstream &file){
-    vector <statement> roster;
-    int count=0;
-    while(1){
-        if(file.eof())break;
-        statement temp;
-        file >> temp.name;
-        file >> temp.surname;
-        file >> temp.date;     
-        file >> temp.payment;
-        roster.push_back(temp);
-        count++;
-    }
-    for(int i=0;i< count;i++){
-        cout << roster[i].name << " " << roster[i].surname << " " << roster[i].date << " " << roster[i].payment<< endl;
-    }
-}
-
-
 
 int main()
 {
-    string path= ".\\data.txt";
-    string command;
-    cout << "Enter command:";
-    cin >> command;
-    if(command == "list"){
-        ifstream file(path);
-         if (!file.is_open()){
-            cerr << "Error open file\n";
-            return 1;
+    map<string,string> telephone_directory;
+    cout << "Enter a number that characterizing the action:"<< endl;
+    cout << "0 - add the subscriber's phone number and surname to the directory"<<endl;
+    cout << "1 - find out the subscriber's last name by phone number"<<endl;
+    cout << "2 - find out the subscriber's phone number by last name"<<endl;
+    cout << "-1 - exit"<< endl;
+    int num;
+    string phone_number,surname;
+    cin >>num;
+    while (num!= -1)
+    {
+        if(num == OPTION::ADD){
+            cout << "Enter phone_number and surname:" <<endl;
+            cin >> phone_number >> surname;
+            telephone_directory.insert(pair<string,string>(phone_number,surname));
+        }else if(num ==OPTION::GET_SURNANE){
+            cout << "Enter phone number:"<<endl;
+            cin >> phone_number;
+            map<string,string>::iterator itf = telephone_directory.find(phone_number);
+            if(itf != telephone_directory.end()){
+                cout << itf->second << endl;
+            }else{
+                cerr << "Was not found"<< endl;
+            }
+        }else if(num==OPTION::GET_PHONE_NUMBER){
+            cout << "Enter surname:"<<endl;
+            cin >> surname;
+            bool found = false;
+            for(map<string,string>::iterator it = telephone_directory.begin();
+                it!= telephone_directory.end();it++){
+                    if(it->second == surname){
+                        found = true;
+                        cout << it->first<< " ";
+                    }
+                }
+            if(!found){
+                cerr << "Was not found";
+            }
+            cout << endl;
+        }else{
+            cerr << "Uncorrect input."<< endl;
         }
-        list_statement(file);
-        file.close();
-    }else if(command=="add"){
-        if(FileIsExist(path)){
-            cerr << "Error found file\n";
-            return 1;
-        }
-        ofstream file(path,ios::app);
-        struct statement new_s;
-        if (!file.is_open()){
-            cerr << "Error open file\n";
-            return 1;
-        }
-        add_statement(new_s,file);
-        file.close();
-    }else{
-        std::cerr << "Invalid operation."<<endl;
+        cout << "Enter a number that characterizing the action:"<< endl;
+        cout << "0 - add the subscriber's phone number and surname to the directory"<<endl;
+        cout << "1 - find out the subscriber's last name by phone number"<<endl;
+        cout << "2 - find out the subscriber's phone number by last name"<<endl;
+        cout << "-1 - exit"<< endl;
+        cin >> num;
     }
+    
 }

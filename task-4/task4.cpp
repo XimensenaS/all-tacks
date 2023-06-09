@@ -7,59 +7,10 @@
 #include <fstream>
 #include <ctime>
 #include <algorithm>
+#include <map>
 
 using namespace std;
 
-enum direction{
-    UP,
-    LEFT,
-    DOWN,
-    RIGHT
-};
-
-struct position
-{
-    int x;
-    int y;
-};
-
-struct person
-{
-    string name;
-    int health_point=50;
-    int armor = 0;
-    int damade = 15;
-};
-
-void attack(person &a,person &d){
-    cout << a.name << "inflicted damage to the character"<< d.name <<"in the amount of" << a.damade<< "."<<endl;
-    d.armor -= a.damade;
-    if(d.armor < 0){
-        d.health_point += d.armor;
-        d.armor = 0;
-    }
-    if(d.health_point < 0){d.health_point=0;}
-}
-
-int edge(int c){
-    if(c==20){
-        return 19;
-    }else if(c==-1){
-        return 0;
-    }else return c;
-}
-
-void load(ifstream &file,person &character,position &coor){
-    int len;
-    file.read((char*)&len,sizeof(len));
-    character.name.resize(len);
-    file.read((char*)character.name.c_str(),len);
-    file.read((char*)&character.health_point,sizeof(character.health_point));
-    file.read((char*)&character.armor,sizeof(character.armor));
-    file.read((char*)&character.damade,sizeof(character.damade));
-    file.read((char*)&coor.x,sizeof(coor.x));
-    file.read((char*)&coor.y,sizeof(coor.y));
-}
 
 int main(){
     bool starting = true;
