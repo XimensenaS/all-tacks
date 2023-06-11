@@ -1,36 +1,35 @@
-#include <string>
+
 #include <iostream>
-#include <map>
 
 using namespace std;
+#define advertisement(start, end) start##_##end
 
-bool checking_anagram(string f,string s){
-    if(f.length() != s.length())return false;
-    map<char,int> splitting_f;
-    map<char,int> splitting_s;
-    for (int i = 0; i < f.length(); i++)
-    {
-        splitting_f.insert(pair<char,int>(f[i],i));
-        splitting_s.insert(pair<char,int>(s[i],i));
+#define cycle(s)                 \
+    for (int i = 0; i < 10; i++) \
+    {                            \
+        s;                       \
     }
-    bool check = true;
-    map<char,int>::iterator it_f,it_s;
-    it_f = splitting_f.begin();
-    it_s = splitting_s.begin();
-    for(int i = 0;i< s.length() && check;++i){
-        check = it_f->first == it_s ->first;
-    }
-    return check;
 
+bool check_overflow(int z)
+{
+    return z > 20;
 }
 
+bool check_empty(int z)
+{
+    return z == 0;
+}
 
 int main()
 {
-    string first,second;
-    cout << "Enter first word ";
-    cin >> first;
-    cout << "Enter second word ";
-    cin >> second;
-    cout << boolalpha << checking_anagram(first,second)<< endl;
+    int train_van[10];
+    int passenger_sum = 0;
+    cycle(cout << "Enter count passenger in " << i + 1 << " van:";
+          cin >> advertisement(train, van)[i];
+          sum += advertisement(train, van)[i];);
+    cycle(if (advertisement(check, overflow)(advertisement(train, van)[i]))
+                  cout << "Overflow in " << i + 1 << " van." << endl;
+          if (advertisement(check, empty)(advertisement(train, van)[i]))
+                  cout << i + 1 << " van empty." << endl;)
+    cout << "Passenger in train " << advertisement(passenger,sum) << "people.";
 }
