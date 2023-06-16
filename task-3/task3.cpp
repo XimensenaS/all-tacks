@@ -26,7 +26,7 @@ int main()
     int passenger_sum = 0;
     cycle(cout << "Enter count passenger in " << i + 1 << " van:";
           cin >> advertisement(train, van)[i];
-          sum += advertisement(train, van)[i];);
+          passenger_sum += advertisement(train, van)[i];);
     cycle(if (advertisement(check, overflow)(advertisement(train, van)[i]))
                   cout << "Overflow in " << i + 1 << " van." << endl;
           if (advertisement(check, empty)(advertisement(train, van)[i]))
