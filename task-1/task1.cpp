@@ -9,6 +9,8 @@
 #include <algorithm>
 #include <map>
 #include <ctime>
+#include <iomanip>
+
 
 using namespace std;
 
@@ -67,8 +69,8 @@ int main()
             int count_completed_task = (active_task) ? (count-1) : (count);
             for (int i = 0; i < count_completed_task; i++)
             {
-                time_t t = duration[i];
-                cout << "Task " << i + 1 << ": " << task_name[i] << ".Duration " << t << " " << t / 3600 << "h " << t % 3600 / 60 << "m " << t / 60 << "c." << endl;
+                tm* t = localtime(&duration[i]);
+                cout << "Task " << i + 1 << ": " << task_name[i] << ".Duration " << put_time(t,"%H:%M:%S") << endl;
             }
         }
         else if (command == "exit")

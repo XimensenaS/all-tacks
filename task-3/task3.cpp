@@ -1,35 +1,26 @@
-
+#include <cmath>
+#include <cstdlib>
 #include <iostream>
+#include <sstream>
+#include <vector>
+#include <fstream>
+#include <ctime>
+#include <algorithm>
+#include <map>
+#include <ctime>
+#include <iomanip>
 
 using namespace std;
-#define advertisement(start, end) start##_##end
-
-#define cycle(s)                 \
-    for (int i = 0; i < 10; i++) \
-    {                            \
-        s;                       \
-    }
-
-bool check_overflow(int z)
-{
-    return z > 20;
-}
-
-bool check_empty(int z)
-{
-    return z == 0;
-}
-
 int main()
 {
-    int train_van[10];
-    int passenger_sum = 0;
-    cycle(cout << "Enter count passenger in " << i + 1 << " van:";
-          cin >> advertisement(train, van)[i];
-          passenger_sum += advertisement(train, van)[i];);
-    cycle(if (advertisement(check, overflow)(advertisement(train, van)[i]))
-                  cout << "Overflow in " << i + 1 << " van." << endl;
-          if (advertisement(check, empty)(advertisement(train, van)[i]))
-                  cout << i + 1 << " van empty." << endl;)
-    cout << "Passenger in train " << advertisement(passenger,sum) << "people.";
+    cout << "Enter time in minuts and seconds" << endl;
+    int minuts, seconds;
+    cin >> minuts >> seconds;
+    time_t duration = minuts * 60 + seconds;
+    for (time_t i = duration; i != 0; i--)
+    {
+        tm *t = localtime(&i);
+        cout << put_time(t, "%R") << endl;
+    }
+    cout << "DING! DING! DING!" << endl;
 }
