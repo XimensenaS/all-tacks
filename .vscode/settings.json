@@ -83,5 +83,6 @@
     "streambuf": "cpp",
     "typeinfo": "cpp"
   },
-  "C_Cpp.errorSquiggles": "disabled"
+  "C_Cpp.errorSquiggles": "disabled",
+  "cmake.sourceDirectory": "C:/Users/User/all-tacks/task-1"
 }
