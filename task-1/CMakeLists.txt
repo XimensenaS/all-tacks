@@ -6,4 +6,4 @@ enable_testing()
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
-set(MY_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
+add_subdirectory(src)
