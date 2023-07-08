@@ -30,7 +30,6 @@
 *.exe
 *.out
 *.app
-build/
 task-4/ATMmachine.bin
 task-2/pic.txt
 task-4/save.bin
