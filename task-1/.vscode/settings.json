@@ -5,6 +5,7 @@
         "typeinfo": "cpp",
         "iostream": "cpp",
         "iomanip": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "cstdlib": "cpp"
     }
 }

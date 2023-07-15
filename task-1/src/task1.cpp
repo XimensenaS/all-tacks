@@ -5,55 +5,41 @@
 #include <ctime>
 #include <iomanip>
 #include <vector>
-#include "track.h"
+#include "branch.h"
 
 using namespace std;
 
 int main()
 {
-    Player *player = new Player;
-    cout << "Enter count track in playlist: ";
-    int counting = 0;
-    cin >> counting;
-    if (counting < 1)
+    int countTrees = 5;
+    Branch *forest[countTrees];
+    for (int i = 0; i < countTrees; i++)
     {
-        cerr << "Incorrect enter" << endl;
-        return 1;
+        forest[i] = new Branch;
+        forest[i]->populate();
+    }
+    string mentionedElf;
+    Branch *searchableBrench = nullptr;
+    std::cout << "Enter a search name: ";
+    std::cin >> mentionedElf;
+    for (int i = 0; searchableBrench == nullptr && i < countTrees; i++)
+    {
+        searchableBrench = forest[i]->findBranch(mentionedElf);
+    }
+    if (searchableBrench == nullptr)
+    {
+        cerr << "Elf or branch not found." << endl;
     }
     else
     {
-        for (int c = 0; c < counting; c++)
+        if (searchableBrench->getParent()->getParent() != nullptr)
         {
-            player->addSong();
+            searchableBrench = searchableBrench->getParent();
         }
-        string command;
-        cout << "Enter command: " << endl;
-        cin >> command;
-        while (command != "exit")
-        {
-            if (command == "play")
-            {
-                player->playSong();
-            }
-            else if (command == "pause")
-            {
-                player->pauseSong();
-            }
-            else if (command == "next")
-            {
-                player->nextSong();
-            }
-            else if (command == "stop")
-            {
-                player->stopSong();
-            }
-            else
-            {
-                cerr << "Incorrect command." << endl;
-            }
-            cout << "Enter command " << endl;
-            cin >> command;
-        }
+        cout << "The elf has"<< searchableBrench->countingNeighbors() <<"neighbors"<< endl;
     }
-    delete player;
+    for (int i = 0; i < countTrees; i++)
+    {
+        forest[i]->clearing();
+    }
 }
