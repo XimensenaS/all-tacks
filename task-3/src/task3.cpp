@@ -1,60 +1,86 @@
 #include <string>
 #include <iostream>
-#include "person.h"
-
+#include <vector>
+#include <thread>
+#include <mutex>
+#include <chrono>
 using namespace std;
+enum MEAL
+{
+    PIZZA,
+    SOUP,
+    STEAK,
+    SALAD,
+    SUSHI
+};
+
+int ready_meals = 0;
+vector<MEAL> waiting_order;
+int complite_order = 0;
+mutex cooking;
+mutex add_order;
+mutex ready_order;
+string meal [5]= {"pizza", "soup", "steak", "salad", "sushi"};
+
+void waiter()
+{
+    while (complite_order < 10)
+    {
+        srand(time(nullptr));
+        this_thread::sleep_for(chrono::seconds(5 + rand() % 6));
+        add_order.lock();
+        MEAL order = static_cast<MEAL>(rand() % 5);
+        cout << "Get order for " << meal[order] << endl;
+        waiting_order.push_back(order);
+        add_order.unlock();
+    }
+}
+
+void kitchen()
+{
+    while (complite_order < 10)
+    {
+        if (waiting_order.size() == 0)
+            continue;
+        add_order.lock();
+        MEAL order = waiting_order.front();
+        waiting_order.erase(waiting_order.cbegin());
+        cout << "Started cooking " << meal[order] << endl;
+        add_order.unlock();
+        cooking.lock();
+        this_thread::sleep_for(chrono::seconds(5 + rand() % 11));
+        cooking.unlock();
+        ready_order.lock();
+        cout << "Order for " << meal[order] << " is ready." << endl;
+        ready_meals++;
+        ready_order.unlock();
+    }
+}
+
+void courier()
+{
+    while (complite_order < 10)
+    {
+        if (ready_meals == 0)
+            continue;
+        ready_order.lock();
+        cout << "Orders were taken for delivery" <<endl;
+        int delivery = ready_meals;
+        ready_meals = 0;
+        ready_order.unlock(); 
+        this_thread::sleep_for(chrono::seconds(10));
+        cout << "Orders are delivered" <<endl;
+        complite_order += delivery;
+        this_thread::sleep_for(chrono::seconds(20));
+    }
+}
+
 int main()
 {
-    string name;
-    int ID = 0;
-    cout << "Enter name leader:";
-    cin >> name;
-    Person *leader = new Person(name, "leader", ID++);
-    cout << "Enter count group:";
-    int countGroup;
-    cin >> countGroup;
-    Worker *managers[countGroup];
-    vector<vector<Worker *>> subordinates;
-    for (int i = 0; i < countGroup; i++)
-    {
-        vector<Worker *> group;
-        int sizeGroup;
-        cout << "Enter number of people in " << i + 1 << " group: ";
-        cin >> sizeGroup;
-        for (int j = 0; j < sizeGroup; j++)
-        {
-            cout << "Enter name worker:";
-            cin >> name;
-            Worker *worker = new Worker(name, "workmen", ID++, i);
-            group.push_back(worker);
-        }
-        subordinates.push_back(group);
-        cout << "Enter name manager " << i + 1 << "group: ";
-        cin >> name;
-        Worker *manager = new Worker(name, "manager", ID++, i);
-        managers[i] = manager;
-    }
-
-    int command, amountFreeWorkers = 0;
-    while (amountFreeWorkers != ID)
-    {
-        cout << "Enter command leader:";
-        cin >> command;
-        for (int i = 0; i < countGroup; i++)
-        {
-            srand(command + managers[i]->getID());
-            cout << "Manager" << managers[i]->getName() << "get command" << endl;
-            int amountTask = 1 + rand() % subordinates[i].size();
-            for (int j = 0, z = 0;j < subordinates[i].size() &&  z < amountTask; j++)
-            {
-                if (subordinates[i][j]->getTask() == TYPETASK::NONE)
-                {
-                    subordinates[i][j]->setTask(rand() / 3);
-                    cout << "Worker " << subordinates[i][j]->getName() << " get task " << subordinates[i][j]->getTask() << "." << endl;
-                    amountFreeWorkers++;
-                    z++;
-                }
-            }
-        }
-    }
+    thread Waiter(waiter);
+    thread Kitchen(kitchen);
+    thread Courier(courier);
+    Waiter.join();
+    Kitchen.join();
+    Courier.join();
 }

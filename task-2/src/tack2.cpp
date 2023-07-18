@@ -1,80 +1,46 @@
 #include <iostream>
 #include <vector>
-#include "geometric_figure.h"
+#include <thread>
+#include <mutex>
+#include <chrono>
 
 using namespace std;
 
+int count_trains = 0;
+mutex railway_station_assent;
+
+void arrival(int time, string designation)
+{
+    this_thread::sleep_for(chrono::seconds(time));
+    if (!railway_station_assent.try_lock())
+        cout << "Train" << designation << "waiting for an empty seat.";
+    while (!railway_station_assent.try_lock()){}
+    lock_guard<mutex> lock(railway_station_assent);
+    cout << "Train" << designation << " has arrived."; 
+    ++count_trains;
+    string command = "";
+    while (command != "depart")
+    {
+        cout << "Train" << designation << "wait command:";
+        cin >> command;
+    }
+    cout << "Train " << designation << "departs.";
+}
+
 int main()
 {
-    cout << "Enter figure: ";
-    string command;
-    cin >> command;
-    if (command == "Circle")
+    int time[3];
+    for (int i = 0; i < 3; i++)
     {
-        cout << "Enter coodinates center (X and Y):" << endl;
-        double X, Y, R;
-        cin >> X >> Y;
-        cout << "Enter colour:" << endl;
-        string color;
-        cin >> color;
-        cout << "Enter radius circle:" << endl;
-        cin >> R;
-        Circle *circle = new Circle(X, Y, coloring(color), R);
-        circle->squareCircle();
-        circle->getColoring();
-        circle->describingCircle();
-        delete circle;
+        cout << "Enter time";
+        cin >> time[i];
     }
-    else if (command == "Square")
-    {
-        cout << "Enter coodinates center (X and Y):" << endl;
-        double X, Y, length;
-        cin >> X >> Y;
-        cout << "Enter colour:" << endl;
-        string color;
-        cin >> color;
-        cout << "Enter length side:" << endl;
-        cin >> length;
-        Square *square = new Square(X, Y, coloring(color), length);
-        square->squareFigure();
-        square->getColoring();
-        square->describingFigure();
-        delete square;
-    }
-    else if (command == "Triangle")
-    {
-        cout << "Enter coodinates center (X and Y):" << endl;
-        double X, Y, length;
-        cin >> X >> Y;
-        cout << "Enter colour:" << endl;
-        string color;
-        cin >> color;
-        cout << "Enter length side:" << endl;
-        cin >> length;
-        Triangle *triangle = new Triangle(X, Y, coloring(color), length);
-        triangle->squareFigure();
-        triangle->getColoring();
-        triangle->describingFigure();
-        delete triangle;
-    }
-    else if (command == "Rectangle")
-    {
-        cout << "Enter coodinates center (X and Y):" << endl;
-        double X, Y, H, W;
-        cin >> X >> Y;
-        cout << "Enter colour:" << endl;
-        string color;
-        cin >> color;
-        cout << "Enter height and wirth:" << endl;
-        cin >> H >> W;
-        Rectangle *rectangle = new Rectangle(X, Y, coloring(color), H, W);
-        rectangle->squareRectangle();
-        rectangle->getColoring();
-        rectangle->describingRectangle();
-        delete rectangle;
-    }
-    else
-    {
-        cout << "Figure not found." << endl;
+    thread train1(arrival,time[0],"A");
+    thread train2(arrival,time[1],"B");
+    thread train3(arrival,time[2],"C");
+    if(railway_station_assent.try_lock() && count_trains == 3){
+        train1.join();
+        train2.join();
+        train3.join();
     }
 }

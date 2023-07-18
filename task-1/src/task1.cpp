@@ -2,44 +2,47 @@
 #include <cstdlib>
 #include <sstream>
 #include <string>
-#include <ctime>
-#include <iomanip>
 #include <vector>
-#include "branch.h"
+#include <thread>
+#include <mutex>
+#include <chrono>
+#include <algorithm>
 
 using namespace std;
 
+vector<int> timer;
+mutex timer_assent;
+
+void swim(int speed)
+{
+
+    int time = 0;
+    for (int distance = 0; distance < 100; distance += speed, time++)
+    {
+        this_thread::sleep_for(chrono::seconds(1));
+    }
+    timer_assent.unlock();
+    timer.push_back(time);
+    timer_assent.lock();
+}
+
 int main()
 {
-    int countTrees = 5;
-    Branch *forest[countTrees];
-    for (int i = 0; i < countTrees; i++)
+    thread swimmer1(swim, 13);
+    thread swimmer2(swim, 11);
+    thread swimmer3(swim, 14);
+    thread swimmer4(swim, 15);
+    thread swimmer5(swim, 10);
+    swim(12);
+    swimmer1.join();
+    swimmer2.join();
+    swimmer3.join();
+    swimmer4.join();
+    swimmer5.join();
+    sort(timer.begin(), timer.end());
+    timer_assent.unlock();
+    for(int i = 0;i < 6;i++)
     {
-        forest[i] = new Branch;
-        forest[i]->populate();
-    }
-    string mentionedElf;
-    Branch *searchableBrench = nullptr;
-    std::cout << "Enter a search name: ";
-    std::cin >> mentionedElf;
-    for (int i = 0; searchableBrench == nullptr && i < countTrees; i++)
-    {
-        searchableBrench = forest[i]->findBranch(mentionedElf);
-    }
-    if (searchableBrench == nullptr)
-    {
-        cerr << "Elf or branch not found." << endl;
-    }
-    else
-    {
-        if (searchableBrench->getParent()->getParent() != nullptr)
-        {
-            searchableBrench = searchableBrench->getParent();
-        }
-        cout << "The elf has"<< searchableBrench->countingNeighbors() <<"neighbors"<< endl;
-    }
-    for (int i = 0; i < countTrees; i++)
-    {
-        forest[i]->clearing();
+        cout << timer[i]<< endl;
     }
 }
