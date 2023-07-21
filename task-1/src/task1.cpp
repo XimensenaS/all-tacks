@@ -3,46 +3,56 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include <thread>
-#include <mutex>
-#include <chrono>
-#include <algorithm>
+#include "branch.h"
 
 using namespace std;
 
-vector<int> timer;
-mutex timer_assent;
-
-void swim(int speed)
-{
-
-    int time = 0;
-    for (int distance = 0; distance < 100; distance += speed, time++)
-    {
-        this_thread::sleep_for(chrono::seconds(1));
-    }
-    timer_assent.unlock();
-    timer.push_back(time);
-    timer_assent.lock();
-}
-
 int main()
 {
-    thread swimmer1(swim, 13);
-    thread swimmer2(swim, 11);
-    thread swimmer3(swim, 14);
-    thread swimmer4(swim, 15);
-    thread swimmer5(swim, 10);
-    swim(12);
-    swimmer1.join();
-    swimmer2.join();
-    swimmer3.join();
-    swimmer4.join();
-    swimmer5.join();
-    sort(timer.begin(), timer.end());
-    timer_assent.unlock();
-    for(int i = 0;i < 6;i++)
+    vector<Dog *> dogs;
+    cout << "Enter count dogs ";
+    int count;
+    cin >> count;
+    for (int i = 0; i < count; i++)
     {
-        cout << timer[i]<< endl;
+        int _talents;
+        cout << "Enter name dog: ";
+        string _name;
+        cin >> _name;
+        Dog *dog = new Dog(_name);
+        dogs.push_back(dog);
+        for (int j = 0; j < _talents; j++)
+        {
+            cout << "Enter denomination talent";
+            string denomination;
+            cin >> denomination;
+            if (denomination == "Swimming")
+            {
+                Talent *talent = new Swimming;
+                dog[i].addTalent(talent);
+            }
+            else if (denomination == "Dancing")
+            {
+                Talent *talent = new Dancing;
+                dog[i].addTalent(talent);
+            }
+            else if (denomination == "Counting")
+            {
+                Talent *talent = new Counting;
+                dog[i].addTalent(talent);
+            }
+            else
+            {
+                cout << "Talent not found." << endl;
+            }
+        }
+    }
+    for(int i = 0; i < count; i++)
+    {
+        dogs[i]->show_Talent();
+    }
+    for(int i = count; i > -1; i--)
+    {
+        delete dogs[i];
     }
 }

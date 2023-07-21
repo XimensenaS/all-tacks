@@ -51,7 +51,7 @@ void kitchen()
         this_thread::sleep_for(chrono::seconds(5 + rand() % 11));
         cooking.unlock();
         ready_order.lock();
-        cout << "Order for " << meal[order] << " is ready." << endl;
+        cout << "Order for " << meal[order]  << " is ready." << endl;
         ready_meals++;
         ready_order.unlock();
     }

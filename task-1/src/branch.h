@@ -2,82 +2,69 @@
 #include <cassert>
 #include <string>
 #include <iostream>
-#include <ctime>
 #include <cstdlib>
 #include <vector>
 
 using namespace std;
 
-class Branch
+class Talent
+{
+public:
+    virtual string getName() = 0;
+
+};
+
+class Swimming : virtual public Talent
 {
 private:
-    class Branch *parent = nullptr;
-    string elfName;
-    vector<Branch *> children;
+    string name = "Swim";
 
 public:
-    Branch* getParent()
+    virtual string getName()
     {
-        return parent;
+        return name;
     }
-    void populate()
+};
+class Dancing : virtual public Talent
+{
+private:
+    string name = "Dance";
+
+public:
+    virtual string getName()
     {
-        srand(time(nullptr));
-        int countBigBranch = 3 + rand() % 3;
-        for (int i = 0; i < countBigBranch; i++)
-        {
-            Branch *bigBranch = new Branch;
-            bigBranch->parent = this;
-            cout << "Enter elf name for " << i + 1 << "big branch ";
-            cin >> bigBranch->elfName;
-            int countMiddleBranch = 2 + rand() % 2;
-            for (int a = 0; a < countMiddleBranch; a++)
-            {
-                Branch *middleBranch = new Branch;
-                middleBranch->parent = bigBranch;
-                cout << "Enter elf name for " << a + 1 << "middle branch in " << i + 1 << " big branch ";
-                cin >> middleBranch->elfName;
-                bigBranch->children.push_back(middleBranch);
-            }
-            this->children.push_back(bigBranch);
-        }
+        return name;
     }
-    Branch *findBranch(string name)
+};
+class Counting : virtual public Talent
+{
+private:
+    string name = "Count";
+
+public:
+    virtual string getName()
     {
-        assert(name != "None");
-        if (this->elfName == name)
-            return this;
-        for (int i = 0; i < this->children.size(); i++)
-        {
-            Branch *found = this->children[i]->findBranch(name);
-            if (found != nullptr)
-                return found;
-        }
-        return nullptr;
+        return name;
     }
-    int countingNeighbors()
+};
+class Dog
+{
+private:
+    string name;
+    vector<Talent *> talents;
+
+public:
+    Dog(string _name) : name(_name) {}
+    virtual void addTalent(Talent *_talent)
     {
-        assert(this != nullptr);
-        int count = 0;
-        if (this->elfName != "None")
-            count++;
-        for (int i = 0; i < this->children.size(); i++)
-        {
-            if (this->children[i]->elfName != "None")
-                count ++;
-        }
-        return --count;
+        talents.push_back(_talent);
     }
-    void clearing()
+    virtual void show_Talent()
     {
-        for (int i = 0; i < this->children.size(); i++)
+        cout << "This is " << name << " and it has some talents:" << endl;
+        for (int i = 0; i < talents.size(); i++)
         {
-            for (int j = 0; j < this->children[i]->children.size(); i++)
-            {
-                delete this->children[i]->children[j];
-            }
-            delete this->children[i];
+            cout << "   It can " << talents[i]->getName() << endl;
         }
-        delete this;
     }
 };
