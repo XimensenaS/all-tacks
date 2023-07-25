@@ -3,8 +3,9 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**",
-                "*/include/"
+                "${workspaceFolder}/build/_deps/cpr-src/include",
+                "${workspaceFolder}/**"
+                //"*/include/**"
             ],
             "defines": [
                 "_DEBUG",

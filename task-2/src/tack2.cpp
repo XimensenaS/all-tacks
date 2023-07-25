@@ -1,16 +1,14 @@
 #include <iostream>
 #include <vector>
-#include "shape.h"
+#include <cpr/cpr.h>
 
 using namespace std;
-
+using namespace cpr;
 
 int main()
 {
-    Triangle t(6,8,10);
-    printParams(&t);
-    Rectangle r(10,45);
-    printParams(&r);
-    Circle c(7.5);
-    printParams(&c);
+    string URL = "http://httpbin.org/html";
+    Response r = Get(Url(URL));
+    cout << r.text.substr(r.text.find("<h1>") + 4, 
+            r.text.find("</h1>") - r.text.find("<h1>") - 4) << endl;
 }

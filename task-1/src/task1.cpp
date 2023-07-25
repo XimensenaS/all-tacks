@@ -3,56 +3,51 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include "branch.h"
+#include <cpr/cpr.h>
 
 using namespace std;
+using namespace cpr;
 
 int main()
 {
-    vector<Dog *> dogs;
-    cout << "Enter count dogs ";
-    int count;
-    cin >> count;
-    for (int i = 0; i < count; i++)
+    string URL = "https://nghttp2.org/httpbin/";
+    Response r;
+    cout << "Enter command" << endl;
+    string command;
+    cin >> command;
+    while (command != "exit")
     {
-        int _talents;
-        cout << "Enter name dog: ";
-        string _name;
-        cin >> _name;
-        Dog *dog = new Dog(_name);
-        dogs.push_back(dog);
-        for (int j = 0; j < _talents; j++)
+        bool found = true;
+        if (command == "get")
         {
-            cout << "Enter denomination talent";
-            string denomination;
-            cin >> denomination;
-            if (denomination == "Swimming")
-            {
-                Talent *talent = new Swimming;
-                dog[i].addTalent(talent);
-            }
-            else if (denomination == "Dancing")
-            {
-                Talent *talent = new Dancing;
-                dog[i].addTalent(talent);
-            }
-            else if (denomination == "Counting")
-            {
-                Talent *talent = new Counting;
-                dog[i].addTalent(talent);
-            }
-            else
-            {
-                cout << "Talent not found." << endl;
-            }
+            r = Get(Url(URL + "get"));
         }
-    }
-    for(int i = 0; i < count; i++)
-    {
-        dogs[i]->show_Talent();
-    }
-    for(int i = count; i > -1; i--)
-    {
-        delete dogs[i];
+        else if (command == "patch")
+        {
+            r = Patch(Url(URL + "patch"));
+        }
+        else if (command == "post")
+        {
+            r = Post(Url(URL + "post"));
+        }
+        else if (command == "put")
+        {
+            r = Put(Url(URL + "put"));
+        }
+        else if (command == "delete")
+        {
+            r = Delete(Url(URL + "delete"));
+        }
+        else
+        {
+            cout << "Not found" << endl;
+            found = false;
+        }
+        if (found)
+        {
+            cout << r.text << endl;
+        }
+        cout << "Enter command" << endl;
+        cin >> command;
     }
 }
