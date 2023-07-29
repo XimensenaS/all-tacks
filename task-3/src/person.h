@@ -2,48 +2,37 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <unordered_set>
 
 using namespace std;
 
-enum TYPETASK{
-    A,
-    B,
-    C,
-    NONE
+struct arc
+{
+    int start;
+    int end;
 };
 
-class Person
+class IGraph
+{
+public:
+    IGraph(){};
+    IGraph(IGraph *_oth){};
+    virtual ~IGraph() {}
+    virtual void addEdge(int from, int to) = 0;                                     // Метод принимает вершины начала и конца ребра и добавляет ребро
+    virtual int verticesCount() const = 0;                                          // Метод должен считать текущее количество вершин
+    virtual void getNextVertices(int vertex, std::vector<int> &vertices) const = 0; // Для конкретной вершины метод выводит в вектор «вершины» все вершины, в которые можно дойти по ребру из данной
+    virtual void getPrevVertices(int vertex, std::vector<int> &vertices) const = 0; // Для конкретной вершины метод выводит в вектор «вершины» все вершины, из которых можно дойти по ребру в данную
+};
+
+class ListGraph : virtual public IGraph
 {
 private:
-    string name;
-    string post;
-    int ID;
+    vector<arc> arcs;
+    unordered_set<int> vertices;
 public:
-    Person(string _name,string _post,int _ID):name(_name),post(_post),ID(_ID){}
-    int getID()
-    {
-        return ID;
-    }
-    string getName()
-    {
-        return name;
-    }
+    
 };
 
-class Worker :public Person
+class MatrixGraph : virtual public IGraph
 {
-private:
-    int group;
-    TYPETASK task = NONE; 
-public:
-    Worker(string _name,string _post,int _ID,int _group):Person(_name,_post,_ID),group(_group){}
-    void setTask(int _task)
-    {
-        this->task =  static_cast<TYPETASK>(_task);
-    }
-    TYPETASK getTask()
-    {
-        return task;
-    }
 };
-

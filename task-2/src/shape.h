@@ -6,105 +6,76 @@
 
 using namespace std;
 
-struct BoundingBoxDimensions
-{
-    double width;
-    double height;
-};
-
-class Shape
-{
-protected:
-    BoundingBoxDimensions dimension;
-
-public:
-    virtual double square() = 0;
-    virtual BoundingBoxDimensions dimensions() = 0;
-    virtual string type() = 0;
-};
-
-class Circle : virtual public Shape
+class Toy
 {
 private:
-    double radius;
+    string name;
 
 public:
-    virtual double square()
+    Toy(string _name) : name(_name) {}
+    string getName() const
     {
-        return atan(1) * 4 * radius * radius;
-    }
-    virtual BoundingBoxDimensions dimensions()
-    {
-        return dimension;
-    }
-    virtual string type()
-    {
-        return "Circle";
-    }
-    Circle(double _radius) : radius(_radius)
-    {
-        this->dimension.height = _radius * 2;
-        this->dimension.width = _radius * 2;
+        return name;
     }
 };
 
-class Rectangle : virtual public Shape
+class Shared_ptr_toy
 {
 private:
-    double lenght;
-    double widthRectangle;
+    Toy *toy;
+    int count;
 
 public:
-    virtual double square()
+    Toy *getToy() const
     {
-        return lenght * widthRectangle;
+        return toy;
     }
-    virtual BoundingBoxDimensions dimensions()
+    int getCOUNT() const
     {
-        return dimension;
+        return count;
     }
-    virtual string type()
+    Shared_ptr_toy(string _name)
     {
-        return "Rectangle";
+        toy = new Toy(_name);
+        count = 0;
     }
-    Rectangle(double _lenght, double _width) : lenght(_lenght), widthRectangle(_width)
+    Shared_ptr_toy(const Shared_ptr_toy &oth)
     {
-        this->dimension.height = _lenght;
-        this->dimension.width = _width;
+        toy = new Toy(*oth.toy);
+        count++;
+    }
+    Shared_ptr_toy &operator=(const Shared_ptr_toy &oth)
+    {
+        if (this == &oth)
+            return *this;
+        if (toy != nullptr)
+        {
+            delete toy;
+            count--;
+        }
+        toy = new Toy(*oth.toy);
+        count ++;
+        return *this;
+    }
+    ~Shared_ptr_toy()
+    {
+        if (toy != nullptr && count == 0)
+        {
+            delete toy;
+        }
+        else
+        {
+            count--;
+        }
     }
 };
 
-class Triangle : virtual public Shape
+Shared_ptr_toy make_shared_toy(string _name = "SomeName")
 {
-private:
-    double a, b, c;
-    double p = (a + b + c) / 2;
+    return Shared_ptr_toy(_name);
+}
 
-public:
-    virtual double square()
-    {
-        return sqrt(p * (p - a) * (p - b) * (p - c));
-    }
-    virtual BoundingBoxDimensions dimensions()
-    {
-        return dimension;
-    }
-    virtual string type()
-    {
-        return "Triangle";
-    }
-    Triangle(double _a, double _b, double _c) : a(_a), b(_b), c(_c)
-    {
-        double side = a * b * c / (4 * sqrt(p * (p - a) * (p - b) * (p - c))) * 2;
-        this->dimension.height = side;
-        this->dimension.width = side;
-    }
-};
-
-void printParams(Shape *_shape)
+Shared_ptr_toy make_shared_toy(const Shared_ptr_toy &other)
 {
-    cout << "Type: " << _shape->type() << endl;
-    cout << "Square: " << _shape->square() << endl;
-    cout << "Wirth: " << _shape->dimensions().width << endl;
-    cout << "Height: " << _shape->dimensions().height << endl;
+    return Shared_ptr_toy(other);
 }
