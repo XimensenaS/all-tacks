@@ -4,44 +4,88 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "nlohmann\json.hpp"
+#include <exception>
 
 using namespace std;
 
-struct film
+void addProduct(map<string, int> &m,string &n,int &c)
 {
-    string country;
-    string datePremiere;
-    string studio;
-    string scriptwriter;
-    string director;
-    string producer;
-    map<string, string> actors;
-};
+    if(c < 1)
+    {
+        throw invalid_argument("Count product");
+    }
+    m.insert(make_pair(n,c));
+}
 
+void removeProduct(map<string, int> &m,string &n,int &c)
+{
+    if(m.at(n) < c)
+    {
+        throw invalid_argument("Count product");
+    }
+    else if (m.count(n) == 0)
+    {
+        throw runtime_error("Name product");
+    }
+    m.erase(n);
+}
 
 int main()
 {
-    film film;
-    film.country = "USA";
-    film.datePremiere = "05.04.23";
-    film.studio = "Universal Pictures,Illumination,Nintendo";
-    film.scriptwriter = "Matthew Vogel";
-    film.director = "Aaron Horvath, Michael Jelenic";
-    film.producer = "Christopher Meledandri,Shigeru Miyamoto";
-    film.actors["Chris Pratt"] = "Mario";
-    film.actors["Charlie Day"] = "Luigi";
-    film.actors["Anya Taylor-Joy"] = "Princess Peach";
-    film.actors["Jack Black"] = "Bowser";
-    film.actors["Keegan-Michael Key"] = "Toad";
-    ofstream file("C:/Users/User/all-tacks/task-1/src/film1.json");
-    nlohmann::json kino = {
-        {"country", film.country},
-        {"datePremiere", film.datePremiere},
-        {"studio", film.studio},
-        {"scriptwriter", film.scriptwriter},
-        {"director", film.director},
-        {"producer", film.producer},
-        {"actor", film.actors}};
-    file << kino;
+    map<string, int> database;
+    map<string, int> basket;
+    string command;
+    cout << "Enter name product(or 'end' for exit): ";
+    cin >> command;
+    while(command != "end")
+    {
+        int counting;
+        cout << "Enter count product: ";
+        cin >> counting;
+        try
+        {
+            addProduct(database,command,counting);
+        }
+        catch(const invalid_argument& e)
+        {
+            std::cerr << "Invalid argument." << endl;
+        }
+        cout << "Enter name product(or 'end' for exit): ";
+        cin >> command;
+    }
+    cout << "Enter command 'add' or 'remove' or 'exit' for exit: ";
+    cin >> command;
+    while (command != "exit")
+    {
+        string name;
+        cout << "Enter name product(or 'end' for exit): ";
+        cin >> name;
+        int counting;
+        cout << "Enter count product: ";
+        cin >> counting;
+        try
+        {
+            if (command == "add")
+            {
+                addProduct(basket,name,counting);
+                removeProduct(database,name,counting);
+            }
+            else if (command == "remove")
+            {
+                removeProduct(basket,name,counting);
+                addProduct(database,name,counting);
+            }
+             
+        }
+        catch(const invalid_argument& e)
+        {
+            cerr << "Invalid argument." << endl;
+        }
+        catch(const runtime_error& e)
+        {
+            cerr << "Not found product" << endl;
+        }
+        cout << "Enter command 'add' or 'remove' or 'exit' for exit: ";
+        cin >> command;
+    }
 }

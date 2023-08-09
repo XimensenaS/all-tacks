@@ -1,56 +1,84 @@
 #include <iostream>
 #include <vector>
-#include <memory>
 #include <fstream>
 #include <string>
-#include <map>
-#include "nlohmann\json.hpp"
-
+#include <time.h>
+#include <stdlib.h>
+#include <exception>
 using namespace std;
 
-struct film
+class CatchFishException : public exception
 {
-    string country;
-    string datePremiere;
-    string studio;
-    string scriptwriter;
-    string director;
-    string producer;
-    map<string, string> actors;
+    const char *what() const noexcept override
+    {
+        return "Catch fish";
+    }
 };
+
+class CatchTheshException : public exception
+{
+    const char *what() const noexcept override
+    {
+        return "Catch boot";
+    }
+};
+
+void fishing(string l[10], int f)
+{
+    if (f > 10)
+    {
+        throw invalid_argument("sector");
+    }
+    if (l[f - 1] == "fish")
+    {
+        throw CatchFishException();
+    }
+    else if (l[f - 1] == "thesh")
+    {
+        throw CatchTheshException();
+    }
+}
 
 int main()
 {
-    int count = 5;
-    film movie[5];
-    string names[count] = {
-        "The Super Mario Bros. Movie",
-        "Guardians of the Galaxy Vol. 3",
-        "Spider-Man: Across the Spider-Verse",
-        "Dungeons & Dragons: Honor Among Thieves",
-        "Oppenheimer"};
-    ifstream file("C:/Users/User/all-tacks/task-2/src/film2.json");
-    nlohmann::json movi[5];
-    for (int i = 0; i < 5; i++)
+    srand(time(nullptr));
+    string lake[10];
+    lake[rand() % 9] = "fish";
+    for (int i = 0; i < 3; i++)
     {
-        file >> movi[i];
-        movie[i].country = movi[i][names[i]]["country"];
-        movie[i].datePremiere = movi[i][names[i]]["datePremiere"];
-        movie[i].studio = movi[i][names[i]]["studio"];
-        movie[i].scriptwriter = movi[i][names[i]]["scriptwriter"];
-        movie[i].director = movi[i][names[i]]["director"];
-        movie[i].producer = movi[i][names[i]]["producer"];
-        movie[i].actors = movi[i][names[i]]["actor"];
-    }
-    cout << "Enter actors: ";
-    string actor;
-    cin >> actor;
-    for (int i = 0; i < count; i++)
-    {
-        if (movie[i].actors.find(actor) != movie[i].actors.end())
+        int f = rand() % 9;
+        if (lake[f] != "fish")
         {
-            cout <<  "movie: " << names[i] << endl << "pole: " << movie[i].actors.at(actor) << endl;
+            lake[f] = "thesh";
+        }
+        else
+        {
+            --i;
         }
     }
-    file.close();
+    int attempts = 1;
+    int slot;
+    cout << "Enter sector number: ";
+    cin >> slot;
+    bool stop = false;
+    while (!stop)
+    {
+        try
+        {
+            fishing(lake, slot);
+            cout << "Enter sector number: ";
+            cin >> slot;
+            ++attempts;
+        }
+        catch (const CatchTheshException &e)
+        {
+            std::cerr << "Unlucky fishing, you catch boot." << endl;
+            stop = true;
+        }
+        catch (const CatchFishException &e)
+        {
+            std::cerr << "Lucky,you catch fish for " << attempts << " attemps." << endl;
+            stop = true;
+        }
+    }
 }

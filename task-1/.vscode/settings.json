@@ -7,6 +7,7 @@
         "iomanip": "cpp",
         "ostream": "cpp",
         "cstdlib": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "stdexcept": "cpp"
     }
 }
