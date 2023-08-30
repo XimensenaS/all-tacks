@@ -8,6 +8,7 @@
         "ostream": "cpp",
         "cstdlib": "cpp",
         "vector": "cpp",
-        "stdexcept": "cpp"
+        "stdexcept": "cpp",
+        "qapplication": "cpp"
     }
 }
