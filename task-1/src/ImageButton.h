@@ -1,6 +1,3 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-
 #include <string>
 #include <QApplication>
 #include <QtWidgets/QLineEdit>
@@ -21,7 +18,7 @@ public:
     {
         setParent(parent);
         setFixedSize(512,512);
-        curImage = QPixmap("C:/Users/User/Downloads/free-icon-start-button-5453658.png");
+        curImage = QPixmap("*/free-icon-start-button-5453658.png");
     }
     ~ImageButton(){}
     void paintEvent(QPaintEvent *e) override
@@ -30,5 +27,3 @@ public:
         p.drawPixmap(e->rect(),curImage);
     };
 };
-
-#endif // MAINWINDOW_H

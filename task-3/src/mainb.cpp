@@ -3,7 +3,6 @@
 QImage blurImage(QPixmap source, int blurRadius)
 {
     if(source.isNull()) {
-        std::cout << blurRadius << std::endl;
         return QImage();
     }
     QGraphicsScene scene;
@@ -19,7 +18,6 @@ QImage blurImage(QPixmap source, int blurRadius)
     QPainter paint(&result);
     scene.render(&paint,QRectF(),
                  QRectF(0,0,source.width(),source.height()));
-    std::cout << blurRadius << "!" <<  std::endl;
     return result;
 }
 
@@ -32,7 +30,6 @@ MainB::MainB(QWidget *parent)
     labelImage = new QLabel(this);
     layout = new QVBoxLayout(this);
 
-    //this->resize(1000,800);
     this->setLayout(layout);
 
     layout->addWidget(labelImage);
@@ -49,19 +46,20 @@ MainB::MainB(QWidget *parent)
     });
     connect(slider,&QSlider::valueChanged,[this](int value)
     {
-        std::cout << value << std::endl;
-        labelImage->updatesEnabled();
         auto image = blurImage(png,value);
         labelImage->setPixmap(QPixmap::fromImage(image).scaled(
                                     labelImage->width(),
                                     labelImage->height(),
                                     Qt::KeepAspectRatio));
-        //labelImage->update();
     });
 }
 
 MainB::~MainB()
 {
+    delete slider;
+    delete buttonForPath;
+    delete labelImage;
+    delete layout;
 }
 
 

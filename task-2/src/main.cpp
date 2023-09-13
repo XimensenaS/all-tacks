@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     });
 
 
-
+    
     window->resize(1900,1000);
     window->show();
     return a.exec();
