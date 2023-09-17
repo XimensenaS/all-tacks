@@ -1,28 +1,17 @@
-﻿#include "mainwindow.h"
-
-#include <QApplication>
-#include <QPushButton>
-#include <QPixmap>
-#include <QPainter>
-#include <QPaintEvent>
-#include <iostream>
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
 
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    ImageButton button(nullptr);
+    QGuiApplication app(argc, argv);
 
-    button.setFixedSize(250,250);
-    button.move(1000,400);
-    button.show();
-    auto player = new QMediaPlayer(&button);
-    QObject::connect(&button,&QPushButton::clicked,[&player]()
-    {
-        player->setMedia(QUrl::fromLocalFile("*/sound.mp3"));
-        player->setVolume(100);
-        player->play();
-    });
-    
-    return a.exec();
+    QQmlApplicationEngine engine;
+    const QUrl url(u"qrc:/animation/Main.qml"_qs);
+    QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed,
+        &app, []() { QCoreApplication::exit(-1); },
+        Qt::QueuedConnection);
+    engine.load(url);
+
+    return app.exec();
 }
